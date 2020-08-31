@@ -17,6 +17,7 @@ import {
 export const createApplication = (data, type) => {
   cy.visit("/multicloud/applications");
   const { name, config } = data;
+  const { timeWindow } = config;
   modal.clickPrimary();
   cy.get(".bx--detail-page-header-title-container").should("exist");
   cy.get("#name").type(name);
@@ -25,38 +26,50 @@ export const createApplication = (data, type) => {
   });
   cy.get(`#${type}`).click();
   if (type === "git") {
-    const { url, username, token, branch, path } = config;
-    cy.get("#githubURL", { timeout: 20 * 1000 }).type(url);
-    if (username && token) {
-      cy.get("#githubUser").type(username);
-      cy.get("#githubAccessID").type(token);
-    }
-    cy.get("#githubBranch").type(branch);
-    cy.get("#githubPath").type(path);
-    // Disable deploy for now when we figure out how to validate the through api
-    // cy.get("#online-cluster-only-checkbox").click({ force: true });
+    createGit(config);
   } else if (type === "objectbucket") {
-    const { url, accessKey, secretKey } = config;
-    cy.get("#objectstoreURL", { timeout: 20 * 1000 }).type(url);
-    cy.get("#accessKey").then(input => {
-      if (input.is("enabled")) {
-        cy.get("#accessKey").type(accessKey);
-        cy.get("#secretKey").type(secretKey);
-      } else {
-        cy.log(`credentials have been saved for ${type} - url: ${url}`);
-      }
-    });
+    createObj(config);
   } else if (type === "local-cluster") {
-    const { repository } = config;
-    repository
-      ? cy.get("#namespaceChannelName", { timeout: 20 * 1000 }).type(repository)
-      : cy.log("skip repository name as it is not provided");
+    createLocal(config);
   }
 
   cy.get("#online-cluster-only-checkbox").click({ force: true });
-  const { timeWindow } = config;
   selectTimeWindow(timeWindow);
+  submitSave();
+};
 
+export const createGit = config => {
+  const { url, username, token, branch, path } = config;
+  cy.get("#githubURL", { timeout: 20 * 1000 }).type(url);
+  if (username && token) {
+    cy.get("#githubUser").type(username);
+    cy.get("#githubAccessID").type(token);
+  }
+  cy.get("#githubBranch").type(branch);
+  cy.get("#githubPath").type(path);
+};
+
+export const createObj = config => {
+  const { url, accessKey, secretKey } = config;
+  cy.get("#objectstoreURL", { timeout: 20 * 1000 }).type(url);
+  cy.get("#accessKey").then(input => {
+    if (input.is("enabled")) {
+      cy.get("#accessKey").type(accessKey);
+      cy.get("#secretKey").type(secretKey);
+    } else {
+      cy.log(`credentials have not been saved...`);
+    }
+  });
+};
+
+export const createLocal = config => {
+  const { repository } = config;
+  repository
+    ? cy.get("#namespaceChannelName", { timeout: 20 * 1000 }).type(repository)
+    : cy.log("skip repository name as it is not provided");
+};
+
+export const submitSave = () => {
   cy
     .get("#create-button-portal-id", { timeout: 20 * 1000 })
     .should("not.be.disabled")
