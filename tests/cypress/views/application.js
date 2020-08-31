@@ -25,7 +25,7 @@ export const createApplication = (data, type) => {
   });
   cy.get(`#${type}`).click();
   if (type === "git") {
-    const { url, username, token, branch, path } = config[0];
+    const { url, username, token, branch, path } = config;
     cy.get("#githubURL", { timeout: 20 * 1000 }).type(url);
     if (username && token) {
       cy.get("#githubUser").type(username);
@@ -36,7 +36,7 @@ export const createApplication = (data, type) => {
     // Disable deploy for now when we figure out how to validate the through api
     // cy.get("#online-cluster-only-checkbox").click({ force: true });
   } else if (type === "objectbucket") {
-    const { url, accessKey, secretKey } = config[0];
+    const { url, accessKey, secretKey } = config;
     cy.get("#objectstoreURL", { timeout: 20 * 1000 }).type(url);
     cy.get("#accessKey").then(input => {
       if (input.is("enabled")) {
@@ -47,12 +47,12 @@ export const createApplication = (data, type) => {
       }
     });
   } else if (type === "local-cluster") {
-    const { repository } = config[0];
+    const { repository } = config;
     repository
       ? cy.get("#namespaceChannelName", { timeout: 20 * 1000 }).type(repository)
       : cy.log("skip repository name as it is not provided");
   }
-  const { timeWindow } = config[0];
+  const { timeWindow } = config;
   selectTimeWindow(timeWindow);
 
   cy
@@ -86,7 +86,7 @@ export const validateResourceTable = name => {
 };
 
 export const validateTimewindow = (name, config) => {
-  const { timeWindow } = config[0];
+  const { timeWindow } = config;
   const windowType = { activeinterval: "active", blockinterval: "blocked" };
   cy
     .exec(
@@ -155,6 +155,7 @@ export const deleteApplicationUI = name => {
 export const apiResources = {
   action: (type, action, data) => {
     const name = data.name;
+    const config = data.config;
     cy
       .exec(
         `oc login --server=${Cypress.env("OC_CLUSTER_URL")} -u ${Cypress.env(
@@ -205,7 +206,7 @@ export const apiResources = {
                 );
               }
             });
-          const { repository } = data;
+          const { repository } = config;
           if (repository) {
             cy
               .exec(`oc get channels -n ${name}-${repository}-chn-ns-0`)

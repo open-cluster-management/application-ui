@@ -3,53 +3,47 @@
     "data": {
       "enable": true,
       "name": "ui-create-app-git",
-      "config": [
-        {
-          "url": "https://github.com/fxiang1/app-samples.git",
-          "username": "",
-          "token": "",
-          "branch": "master",
-          "path": "helloworld",
-          "timeWindow": {
-            "setting": true,
-            "type": "blockinterval",
-            "date": "Monday"
-          }
+      "config": {
+        "url": "https://github.com/fxiang1/app-samples.git",
+        "username": "",
+        "token": "",
+        "branch": "master",
+        "path": "helloworld",
+        "timeWindow": {
+          "setting": true,
+          "type": "blockinterval",
+          "date": "Monday"
         }
-      ]
+      }
     }
   },
   "objectbucket": {
     "data": {
       "enable": true,
       "name": "ui-create-app-objbucket",
-      "config": [
-        {
-          "url": "http://ec2-100-26-232-156.compute-1.amazonaws.com:9000/minio/dev1",
-          "accessKey": "admin",
-          ***REMOVED***,
-          "timeWindow": {
-            "setting": true,
-            "type": "activeinterval",
-            "date": "Sunday"
-          }
+      "config": {
+        "url": "http://ec2-100-26-232-156.compute-1.amazonaws.com:9000/minio/dev1",
+        "accessKey": "admin",
+        ***REMOVED***,
+        "timeWindow": {
+          "setting": true,
+          "type": "activeinterval",
+          "date": "Sunday"
         }
-      ]
+      }
     }
   },
   "local-cluster": {
     "data": {
       "enable": true,
       "name": "ui-create-app-local",
-      "config": [
-        {
-          "repository": "ui-test",
-          "timeWindow": {
-            "setting": true,
-            "type": "active"
-          }
+      "config": {
+        "repository": "ui-test",
+        "timeWindow": {
+          "setting": true,
+          "type": "active"
         }
-      ]
+      }
     }
   }
 }
