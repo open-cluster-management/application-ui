@@ -52,6 +52,8 @@ export const createApplication = (data, type) => {
       ? cy.get("#namespaceChannelName", { timeout: 20 * 1000 }).type(repository)
       : cy.log("skip repository name as it is not provided");
   }
+
+  cy.get("#online-cluster-only-checkbox").click({ force: true });
   const { timeWindow } = config;
   selectTimeWindow(timeWindow);
 
@@ -179,6 +181,10 @@ export const apiResources = {
                   )
                   .its("stdout")
                   .should("contain", name);
+                cy
+                  .exec(`oc ${action} ns ${name}-app-samples-chn-ns-0`)
+                  .its("stdout")
+                  .should("contain", `${name}`);
               } else {
                 cy.log(
                   `The channel ${name}--app-samples-chn-0 in namespace:${name}-app-samples-chn-ns-0 is empty`
@@ -200,6 +206,10 @@ export const apiResources = {
                   )
                   .its("stdout")
                   .should("contain", name);
+                cy
+                  .exec(`oc ${action} ns ${name}-resource-ns-0`)
+                  .its("stdout")
+                  .should("contain", `${name}`);
               } else {
                 cy.log(
                   `The channel ${name}-resource-0 in namespace:${name}-resource-ns-0 is empty`
@@ -220,6 +230,10 @@ export const apiResources = {
                     )
                     .its("stdout")
                     .should("contain", name);
+                  cy
+                    .exec(`oc ${action} ns ${name}-${repository}-chn-ns-0`)
+                    .its("stdout")
+                    .should("contain", `${name}`);
                 } else {
                   cy.log(
                     `The channel ${name}-${repository}-chn-0 in namespace:${name}-${repository}-chn-ns-0 is empty`
@@ -240,6 +254,10 @@ export const apiResources = {
                   )
                   .its("stdout")
                   .should("contain", name);
+                cy
+                  .exec(`oc ${action} ns ${name}-dev1-chn-ns-0`)
+                  .its("stdout")
+                  .should("contain", `${name}`);
               } else {
                 cy.log(
                   `The channel ${name}-dev1-chn-0 in namespace:${name}-dev1-chn-ns-0 is empty`
@@ -280,6 +298,10 @@ export const apiResources = {
                 .exec(
                   `oc ${action} placementrule ${name}-placement-0 -n ${name}-ns`
                 )
+                .its("stdout")
+                .should("contain", `${name}`);
+              cy
+                .exec(`oc ${action} ns ${name}-ns`)
                 .its("stdout")
                 .should("contain", `${name}`);
             } else {
