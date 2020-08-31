@@ -15,9 +15,8 @@ import {
 } from "./common";
 
 export const createApplication = (data, type) => {
+  cy.visit("/multicloud/applications");
   const { name, timeWindow } = data;
-  type = type.replace(/\s+/g, "-").toLowerCase();
-  cy.wait(10000);
   modal.clickPrimary();
   cy.get(".bx--detail-page-header-title-container").should("exist");
   cy.get("#name").type(name);

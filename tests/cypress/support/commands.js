@@ -224,3 +224,7 @@ Cypress.Commands.add("deleteAppResourceAPI", (token, kind, namespace, name) => {
       return cy.wrap(resp.status);
     });
 });
+
+Cypress.Commands.add("get$", selector => {
+  return cy.wrap(Cypress.$(selector)).should("have.length.gte", 1);
+});

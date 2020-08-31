@@ -1,5 +1,8 @@
 {
-  "pageLoadTimeout": 100000,
+  "retries": {
+    "runMode": 1,
+    "openMode": 3
+  },
   "integrationFolder": "cypress/tests",
   "fixturesFolder": "cypress/fixtures",
   "pluginsFile": "cypress/plugins/index.js",

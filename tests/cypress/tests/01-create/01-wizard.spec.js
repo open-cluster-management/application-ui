@@ -11,9 +11,6 @@ describe("Application", () => {
 
     if (data.enable) {
       it(`can be created on resource ${type} from the wizard`, () => {
-        cy.visit("/multicloud/applications").then(() => {
-          cy.reload();
-        });
         createApplication(data, type);
       });
     } else {

@@ -96,7 +96,13 @@ export const modal = {
   clickDanger: () =>
     cy.get(".bx--modal .bx--btn--danger--primary", { timeout: 20000 }).click(),
   clickPrimary: () =>
-    cy.get(".bx--btn.bx--btn--sm.bx--btn--primary", { timeout: 20000 }).click(),
+    cy
+      .get(".bx--btn.bx--btn--sm.bx--btn--primary", { timeout: 20 * 1000 })
+      .then($el => {
+        Cypress.dom.isDetached($el); // false
+      })
+      .click({ force: true }),
+  // cy.get(".bx--btn.bx--btn--sm.bx--btn--primary", { timeout: 20000 }).click(),
   clickSecondary: () =>
     cy
       .get(".bx--btn.bx--btn--sm.bx--btn--secondary", { timeout: 20000 })
