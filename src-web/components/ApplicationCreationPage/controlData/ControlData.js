@@ -90,7 +90,7 @@ export const updateControlsForNS = (
     const selectedRuleNameControl = _.get(control, 'selectedRuleName')
     //update placement rule controls
     if (existingRuleControl && existingruleCheckbox) {
-      if (availableData[active] === undefined) {
+      if (availableData===undefined || availableData[active] === undefined) {
         //user defined namespace
         _.set(existingruleCheckbox, 'type', 'hidden')
         _.set(existingRuleControl, 'type', 'hidden')

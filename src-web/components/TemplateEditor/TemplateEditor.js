@@ -22,14 +22,15 @@ import {
   ToggleSmall,
   TooltipDefinition
 } from 'carbon-components-react'
-import { initializeControlData } from './utils/initialize-form'
-import { cacheUserData, updateControls } from './utils/update-form'
+import { initializeControlData, cacheUserData } from './utils/initialize-control-data'
+//import { initializeControlSourcePaths } from './utils/initialize-control-source-paths'
+import { updateControls } from './utils/refresh-controls-from-source'
+import { generateSourceFromTemplate } from './utils/refresh-source-from-templates'
+import { getUniqueName } from './utils/source-utils'
 import {
-  generateYAML,
   highlightChanges,
   highlightAllChanges,
-  getUniqueName
-} from './utils/update-source'
+} from './utils/refresh-source-highlighting'
 import ControlPanel from './components/ControlPanel'
 import EditorHeader from './components/EditorHeader'
 import EditorBar from './components/EditorBar'
@@ -126,7 +127,9 @@ export default class TemplateEditor extends React.Component {
           _.cloneDeep(initialControlData),
           locale
         );
-        ({ templateYAML, templateObject } = generateYAML(
+        //initializeControlSourcePaths(template,
+        //  controlData);
+        ({ templateYAML, templateObject } = generateSourceFromTemplate(
           template,
           controlData
         ))
@@ -141,7 +144,7 @@ export default class TemplateEditor extends React.Component {
           const uniqueName = getUniqueName(active, new Set(existing))
           if (uniqueName !== active) {
             name.active = uniqueName;
-            ({ templateYAML, templateObject } = generateYAML(
+            ({ templateYAML, templateObject } = generateSourceFromTemplate(
               template,
               controlData
             ))
@@ -370,7 +373,7 @@ export default class TemplateEditor extends React.Component {
       onSelect(control, controlData)
     }
 
-    const { templateYAML: newYAML, templateObject } = generateYAML(
+    const { templateYAML: newYAML, templateObject } = generateSourceFromTemplate(
       template,
       controlData,
       otherYAMLTabs
@@ -439,11 +442,14 @@ export default class TemplateEditor extends React.Component {
     } else {
       active.splice(inx, 1)
     }
-    const { templateYAML: newYAML, templateObject } = generateYAML(
+    const { templateYAML: newYAML, templateObject } = generateSourceFromTemplate(
       template,
       controlData,
       otherYAMLTabs
     )
+
+
+
     updateControls(
       this.editors,
       newYAML,
@@ -538,7 +544,7 @@ export default class TemplateEditor extends React.Component {
       if (replaceTemplate) {
         template = replaceTemplate
         newYAMLTabs = newYAMLTabs || [];
-        ({ templateYAML: newYAML, templateObject } = generateYAML(
+        ({ templateYAML: newYAML, templateObject } = generateSourceFromTemplate(
           template,
           controlData,
           newYAMLTabs
@@ -910,7 +916,7 @@ export default class TemplateEditor extends React.Component {
     // update the main yaml--for now
     if (activeYAMLEditor !== 0) {
       const { template, templateYAML: oldYAML } = this.state
-      const { templateYAML: newYAML, templateObject } = generateYAML(
+      const { templateYAML: newYAML, templateObject } = generateSourceFromTemplate(
         template,
         controlData,
         otherYAMLTabs
@@ -934,7 +940,7 @@ export default class TemplateEditor extends React.Component {
     const { locale } = this.context
     const { template, controlData, otherYAMLTabs } = this.state
     let canCreate = false
-    const { templateYAML } = generateYAML(
+    const { templateYAML } = generateSourceFromTemplate(
       template,
       controlData,
       otherYAMLTabs,
@@ -1129,7 +1135,7 @@ export default class TemplateEditor extends React.Component {
       locale
     )
     const otherYAMLTabs = []
-    const { templateYAML, templateObject } = generateYAML(
+    const { templateYAML, templateObject } = generateSourceFromTemplate(
       template,
       controlData,
       otherYAMLTabs

@@ -21,7 +21,7 @@ import {
   Icon
 } from 'carbon-components-react'
 import msgs from '../../../../nls/platform.properties'
-import { ControlMode } from '../../TemplateEditor/utils/initialize-form'
+import { ControlMode } from '../../TemplateEditor/utils/source-utils'
 import '../../../../graphics/diagramIcons.svg'
 import _ from 'lodash'
 
@@ -460,16 +460,10 @@ class ControlPanelTable extends React.Component {
     const { available, controlData } = control
     let { active } = control
     const availableMap = _.keyBy(available, 'id')
-    const defaults = {}
-    controlData.forEach(({ id: _id, active: _active }) => {
-      if (_active) {
-        defaults[_id] = _active
-      }
-    })
     if (id) {
       // add to active
       if (document.getElementById(id).checked) {
-        this.addActives(active, [availableMap[id]], defaults)
+        this.addActives(active, [availableMap[id]], controlData)
       } else {
         // remove from active
         const inx = active.findIndex(data => id === data.id)
@@ -480,19 +474,29 @@ class ControlPanelTable extends React.Component {
       control.active = [];
       ({ active } = control)
       if (!wasActive) {
-        this.addActives(active, available, defaults)
+        this.addActives(active, available, controlData)
       }
     }
     this.props.handleChange(control)
   };
 
-  addActives(active, actives, defaults) {
+  addActives(active, actives, controlData) {
     actives.forEach(value => {
       Object.keys(value).forEach(
         key => value[key] === null && delete value[key]
       )
-      active.push({ ...defaults, ...value })
+      active.push({ ...this.getDefaults(active, actives, controlData), ...value })
     })
+  }
+
+  getDefaults(active, actives, controlData) {
+    const defaults = {}
+    controlData.forEach(({ id: _id, active: _active }) => {
+      if (_active) {
+        defaults[_id] = typeof _active==='function' ? _active(active) : _active
+      }
+    })
+    return defaults
   }
 
   handleCellEdit(rinx, header, type, e) {

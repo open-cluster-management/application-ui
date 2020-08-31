@@ -9,8 +9,7 @@
  *******************************************************************************/
 'use strict'
 
-import { ControlMode } from './initialize-form'
-import { parseYAML } from './update-source'
+import { ControlMode, parseYAML } from './source-utils'
 import msgs from '../../../../nls/platform.properties'
 import _ from 'lodash'
 
@@ -63,6 +62,7 @@ export function updateControls(
         case 'group':
           updateGroupControl(
             active,
+            controlData,
             templateObjectMap,
             templateExceptionMap,
             isFinalValidate,
@@ -84,6 +84,7 @@ export function updateControls(
         default:
           updateControl(
             control,
+            controlData,
             templateObjectMap,
             templateExceptionMap,
             isFinalValidate,
@@ -147,6 +148,7 @@ export function updateControls(
 
 const updateGroupControl = (
   group,
+  parentControlData,
   templateObjectMap,
   templateExceptionMap,
   isFinalValidate,
@@ -157,6 +159,7 @@ const updateGroupControl = (
       delete control.exception
       updateControl(
         control,
+        parentControlData,
         templateObjectMap,
         templateExceptionMap,
         isFinalValidate,
@@ -196,6 +199,7 @@ const updateTableControl = (
         }
         updateControl(
           control,
+          controlData,
           templateObjectMap,
           templateExceptionMap,
           isFinalValidate,
@@ -239,13 +243,17 @@ const updateTableControl = (
 
 const updateControl = (
   control,
+  controlData,
   templateObjectMap,
   templateExceptionMap,
   isFinalValidate,
   locale
 ) => {
   // if final validation before creating template, if this value is required, throw error
-  const { type } = control
+  const { type, hidden } = control
+  if (typeof hidden === 'function' && hidden(control, controlData)) {
+    return
+  }
   if ((isFinalValidate || type === 'number') && control.validation) {
     const {
       name,
@@ -255,7 +263,7 @@ const updateControl = (
     } = control
     if (required && (!active || (type === 'cards' && active.length === 0))) {
       const msg =
-        !name || isNaN(active) ? notification : 'creation.missing.input'
+        notification ? notification : 'creation.missing.input'
       control.exception = msgs.get(msg, [name], locale)
       const { sourcePath } = control
       if (sourcePath) {
@@ -682,20 +690,4 @@ const getRow = (path, parsed) => {
     )
   }
   return synced ? synced.$r + 1 : 0
-}
-
-//don't save user data until they create
-export const cacheUserData = controlData => {
-  controlData.forEach(control => {
-    if (
-      control.cacheUserValueKey &&
-      control.userData &&
-      control.userData.length > 0
-    ) {
-      const storageKey = `${control.cacheUserValueKey}--${
-        window.location.href
-      }`
-      sessionStorage.setItem(storageKey, JSON.stringify(control.userData))
-    }
-  })
 }
