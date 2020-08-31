@@ -32,8 +32,8 @@ export const createApplication = (data, type) => {
   } else if (type === "local-cluster") {
     createLocal(config);
   }
-
-  cy.get("#online-cluster-only-checkbox").click({ force: true });
+  // comment until the validation is done
+  // cy.get("#online-cluster-only-checkbox").click({ force: true });
   selectTimeWindow(timeWindow);
   submitSave();
 };
