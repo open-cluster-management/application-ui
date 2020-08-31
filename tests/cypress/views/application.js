@@ -16,7 +16,7 @@ import {
 
 export const createApplication = (data, type) => {
   cy.visit("/multicloud/applications");
-  const { name, timeWindow } = data;
+  const { name, config } = data;
   modal.clickPrimary();
   cy.get(".bx--detail-page-header-title-container").should("exist");
   cy.get("#name").type(name);
@@ -25,7 +25,7 @@ export const createApplication = (data, type) => {
   });
   cy.get(`#${type}`).click();
   if (type === "git") {
-    const { url, username, token, branch, path } = data;
+    const { url, username, token, branch, path } = config[0];
     cy.get("#githubURL", { timeout: 20 * 1000 }).type(url);
     if (username && token) {
       cy.get("#githubUser").type(username);
@@ -36,7 +36,7 @@ export const createApplication = (data, type) => {
     // Disable deploy for now when we figure out how to validate the through api
     // cy.get("#online-cluster-only-checkbox").click({ force: true });
   } else if (type === "objectbucket") {
-    const { url, accessKey, secretKey } = data;
+    const { url, accessKey, secretKey } = config[0];
     cy.get("#objectstoreURL", { timeout: 20 * 1000 }).type(url);
     cy.get("#accessKey").then(input => {
       if (input.is("enabled")) {
@@ -47,12 +47,12 @@ export const createApplication = (data, type) => {
       }
     });
   } else if (type === "local-cluster") {
-    const { repository } = data;
+    const { repository } = config[0];
     repository
       ? cy.get("#namespaceChannelName", { timeout: 20 * 1000 }).type(repository)
       : cy.log("skip repository name as it is not provided");
   }
-
+  const { timeWindow } = config[0];
   selectTimeWindow(timeWindow);
 
   cy
@@ -61,7 +61,6 @@ export const createApplication = (data, type) => {
     .click();
   notification.shouldExist("success", { timeout: 60 * 1000 });
   cy.location("pathname", { timeout: 60 * 1000 }).should("include", `${name}`);
-  return name;
 };
 
 export const validateTopology = name => {
@@ -86,7 +85,8 @@ export const validateResourceTable = name => {
   cy.get(".bx--detail-page-header-title");
 };
 
-export const validateTimewindow = (name, timeWindow) => {
+export const validateTimewindow = (name, config) => {
+  const { timeWindow } = config[0];
   const windowType = { activeinterval: "active", blockinterval: "blocked" };
   cy
     .exec(

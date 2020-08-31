@@ -15,7 +15,7 @@ describe("Application", () => {
         apiResources.action(type, "get", data);
       });
       it(`timewindow - should be validated - ${type}: ${data.name}`, () => {
-        validateTimewindow(data.name, data.timeWindow);
+        validateTimewindow(data.name, data.config);
       });
     } else {
       it(`disable validation on resource ${type}`, () => {
