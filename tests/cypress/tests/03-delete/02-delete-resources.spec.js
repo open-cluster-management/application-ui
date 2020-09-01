@@ -3,7 +3,7 @@
  *******************************************************************************/
 
 const config = JSON.parse(Cypress.env("TEST_CONFIG"));
-import { apiResources } from "../../views/application";
+import { apiResources } from "../../views/resources";
 
 describe("Cleanup resouces", () => {
   for (const type in config) {
