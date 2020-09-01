@@ -3,15 +3,17 @@
     "data": {
       "enable": false,
       "name": "",
-      "url": "",
-      "username": "",
-      "token": "",
-      "branch": "",
-      "path": "",
-      "timeWindow": {
-        "setting": false,
-        "type": "blockinterval",
-        "date": "Tuesday"
+      "config": {
+        "url": "",
+        "username": "",
+        "token": "",
+        "branch": "",
+        "path": "",
+        "timeWindow": {
+          "setting": false,
+          "type": "",
+          "date": ""
+        }
       }
     }
   },
@@ -19,13 +21,15 @@
     "data": {
       "enable": false,
       "name": "",
-      "url": "",
-      "accessKey": "",
-      "secretKey": "",
-      "timeWindow": {
-        "setting": false,
-        "type": "blockinterval",
-        "date": "Monday"
+      "config": {
+        "url": "",
+        "accessKey": "",
+        "secretKey": "",
+        "timeWindow": {
+          "setting": false,
+          "type": "",
+          "date": ""
+        }
       }
     }
   },
@@ -33,10 +37,12 @@
     "data": {
       "enable": false,
       "name": "",
-      "repository": "",
-      "timeWindow": {
-        "setting": false,
-        "type": "active"
+      "config": {
+        "repository": "",
+        "timeWindow": {
+          "setting": false,
+          "type": ""
+        }
       }
     }
   }

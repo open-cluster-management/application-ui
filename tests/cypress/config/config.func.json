@@ -23,8 +23,8 @@
       "name": "ui-create-app-objbucket",
       "config": {
         "url": "http://ec2-100-26-232-156.compute-1.amazonaws.com:9000/minio/dev1",
-        "accessKey": "admin",
-        ***REMOVED***,
+        "accessKey": "user",
+        "secretKey": "password",
         "timeWindow": {
           "setting": true,
           "type": "activeinterval",
