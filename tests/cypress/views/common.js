@@ -102,7 +102,6 @@ export const modal = {
         Cypress.dom.isDetached($el); // false
       })
       .click({ force: true }),
-  // cy.get(".bx--btn.bx--btn--sm.bx--btn--primary", { timeout: 20000 }).click(),
   clickSecondary: () =>
     cy
       .get(".bx--btn.bx--btn--sm.bx--btn--secondary", { timeout: 20000 })
